@@ -1,6 +1,6 @@
 {
   "name": "js-waves-particles",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A lightweight, canvas-based wave and particle animation library with mouse-reactive effects. Perfect for adding a subtle, organic feel to backgrounds in web projects.",
   "type": "module",
   "main": "./dist/wave-particles.iife.js",
