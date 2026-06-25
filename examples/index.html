@@ -3,58 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@luismoniz/wave-particles — Example & Documentation</title>
+    <title>js-waves-particles — Example & Documentation</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="content-wrapper">
-        <h1>@luismoniz/wave-particles</h1>
-        <p class="subtitle">Interactive Demo & Implementation Guide</p>
+<div class="content-wrapper">
+    <h1>js-waves-particles</h1>
+    <p class="subtitle">Interactive Demo & Implementation Guide</p>
 
-        <!-- Live Controls Section -->
-        <section id="example-controls">
-            <h2><span class="badge">Interactive</span> Live Customization</h2>
-            <p>Fine-tune each wave individually and randomize particle colors.</p>
-
-            <div class="global-settings">
-                <h3>Global Settings</h3>
-                <div class="controls">
-                    <div class="control-group">
-                         <div class="control-item">
-                            <label for="particleCount">Max Particles: <span id="particleCount-val"></span></label>
-                            <input type="range" id="particleCount" min="0" max="500" step="1">
-                        </div>
-                        <div class="control-item">
-                            <label>Particle Palette:</label>
-                            <div id="particle-colors-container"></div>
-                            <button onclick="addParticleColor()">+ Color</button>
-                        </div>
+    <!-- Live Controls Section -->
+    <section id="example-controls">
+        <h2><span class="badge">Interactive</span> Live Customization</h2>
+        <p>Fine-tune the waves, particles, and background gradient in real-time.</p>
+        
+        <br>
+        
+        <div class="global-settings">
+            <h3>Global Settings</h3>
+            <div class="controls">
+                <div class="control-group">
+                    <div class="control-item">
+                        <label for="particleCount">Max Particles: <span id="particleCount-val"></span></label>
+                        <input type="range" id="particleCount" min="0" max="500" step="1">
+                    </div>
+                    <div class="control-item">
+                        <label>Particle Palette:</label>
+                        <div id="particle-colors-container" class="color-list"></div>
+                        <button onclick="addParticleColor()">+ Color</button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-item">
+                        <label>Background Gradient:</label>
+                        <div id="background-colors-container" class="color-list"></div>
+                        <button onclick="addBackgroundColor()">+ Color</button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div id="waves-container">
-                <h3>Wave Layers</h3>
-                <!-- Wave control blocks will be injected here -->
-            </div>
+        <div id="waves-container">
+            <h3>Wave Layers</h3>
+            <!-- Wave control blocks will be injected here -->
+        </div>
 
-            <div class="button-group" style="margin-top: 2rem;">
-                <button onclick="toggleAnimation()">⏯ Toggle Play/Pause</button>
-                <button onclick="addNewWave()">✨ Add New Wave</button>
-            </div>
-        </section>
+        <div class="button-group" style="margin-top: 2rem;">
+            <button onclick="toggleAnimation()">⏯ Toggle Play/Pause</button>
+            <button onclick="addNewWave()">✨ Add New Wave</button>
+        </div>
+    </section>
 
-        <!-- Installation -->
-        <section id="docs-install">
-            <h2><span class="badge">1</span> Installation</h2>
-            <pre>npm install @luismoniz/wave-particles</pre>
-        </section>
+    <!-- Installation -->
+    <section id="docs-install">
+        <h2><span class="badge">1</span> Installation</h2>
+        <pre>npm install js-waves-particles</pre>
+    </section>
 
-        <!-- Vanilla JS / HTML -->
-        <section id="docs-vanilla">
-            <h2><span class="badge">2</span> Standard HTML / CDN</h2>
-            <p>For simple projects, include the script tag. The class is exposed globally as <code>WaveParticles</code>.</p>
-            <pre>&lt;script src="dist/wave-particles.iife.js"&gt;&lt;/script&gt;
+    <!-- Vanilla JS / HTML -->
+    <section id="docs-vanilla">
+        <h2><span class="badge">2</span> Standard HTML / CDN</h2>
+        <p>Include the script tag. The class is exposed globally as <code>WaveParticles</code>.</p>
+        <pre>&lt;script src="dist/wave-particles.iife.js"&gt;&lt;/script&gt;
 &lt;script&gt;
   const animation = new WaveParticles({
     config: {
@@ -62,14 +71,15 @@
     }
   });
 &lt;/script&gt;</pre>
-        </section>
+    </section>
 
-        <!-- React -->
-        <section id="docs-react">
-            <h2><span class="badge">3</span> Using with React</h2>
-            <p>Initialize inside <code>useEffect</code> and ensure you call <code>destroy()</code> to prevent memory leaks during hot-reloads or route changes.</p>
-            <pre>import { useEffect } from 'react';
-import WaveParticles from '@luismoniz/wave-particles';
+    <!-- React -->
+    <section id="docs-react">
+        <h2><span class="badge">3</span> Using with React</h2>
+        <p>Initialize inside <code>useEffect</code> and ensure you call <code>destroy()</code> to prevent memory leaks
+            during hot-reloads or route changes.</p>
+        <pre>import { useEffect } from 'react';
+import WaveParticles from 'js-waves-particles';
 
 function Background() {
   useEffect(() => {
@@ -79,29 +89,29 @@ function Background() {
 
   return null;
 }</pre>
-        </section>
+    </section>
 
-        <!-- Vue -->
-        <section id="docs-vue">
-            <h2><span class="badge">4</span> Using with Vue 3</h2>
-            <p>Use the <code>onMounted</code> and <code>onUnmounted</code> lifecycle hooks.</p>
-            <pre>&lt;script setup&gt;
+    <!-- Vue -->
+    <section id="docs-vue">
+        <h2><span class="badge">4</span> Using with Vue 3</h2>
+        <p>Use the <code>onMounted</code> and <code>onUnmounted</code> lifecycle hooks.</p>
+        <pre>&lt;script setup&gt;
 import { onMounted, onUnmounted } from 'vue';
-import WaveParticles from '@luismoniz/wave-particles';
+import WaveParticles from 'js-waves-particles';
 
 onMounted(() => {
   const animation = new WaveParticles();
   onUnmounted(() => animation.destroy());
 });
 &lt;/script&gt;</pre>
-        </section>
+    </section>
 
-        <!-- Angular -->
-        <section id="docs-angular">
-            <h2><span class="badge">5</span> Using with Angular</h2>
-            <p>Implement <code>AfterViewInit</code> and <code>OnDestroy</code> interfaces.</p>
-            <pre>import { Component, AfterViewInit, OnDestroy } from '@angular/core';
-import WaveParticles from '@luismoniz/wave-particles';
+    <!-- Angular -->
+    <section id="docs-angular">
+        <h2><span class="badge">5</span> Using with Angular</h2>
+        <p>Implement <code>AfterViewInit</code> and <code>OnDestroy</code> interfaces.</p>
+        <pre>import { Component, AfterViewInit, OnDestroy } from '@angular/core';
+import WaveParticles from 'js-waves-particles';
 
 @Component({ ... })
 export class AppComponent implements AfterViewInit, OnDestroy {
@@ -115,13 +125,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.animation.destroy();
   }
 }</pre>
-        </section>
+    </section>
 
-        <!-- Advanced Config -->
-        <section id="docs-config">
-            <h2><span class="badge">6</span> Full Configuration</h2>
-            <p>Every aspect of the visual engine can be tweaked via the constructor.</p>
-            <pre>const animation = new WaveParticles({
+    <!-- Advanced Config -->
+    <section id="docs-config">
+        <h2><span class="badge">6</span> Full Configuration</h2>
+        <p>Every aspect of the visual engine can be tweaked via the constructor.</p>
+        <pre>const animation = new WaveParticles({
   canvas: '#custom-id',
   config: {
     waves: [{
@@ -139,11 +149,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
   }
 });</pre>
-        </section>
-    </div>
+    </section>
+</div>
 
-    <!-- Scripts -->
-    <script src="../dist/wave-particles.iife.js"></script>
-    <script src="script.js"></script>
+<!-- Scripts -->
+<script src="../dist/wave-particles.iife.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

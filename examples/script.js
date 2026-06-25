@@ -7,6 +7,7 @@ const wavesContainer = document.getElementById('waves-container');
 const particleCountInput = document.getElementById('particleCount');
 const particleCountVal = document.getElementById('particleCount-val');
 const particleColorsContainer = document.getElementById('particle-colors-container');
+const backgroundColorsContainer = document.getElementById('background-colors-container');
 
 // --- Helper Functions ---
 
@@ -19,7 +20,11 @@ function hexToRgba(hex, alpha) {
 
 function rgbaToHex(rgba) {
     const match = rgba.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-    if (!match) return "#f8e1e7";
+    
+    if (!match) {
+        return rgba.startsWith('#') ? rgba : "#f8e1e7";
+    }
+    
     const r = parseInt(match[1]).toString(16).padStart(2, '0');
     const g = parseInt(match[2]).toString(16).padStart(2, '0');
     const b = parseInt(match[3]).toString(16).padStart(2, '0');
@@ -37,8 +42,10 @@ function hexToRgbaPrefix(hex) {
 
 function renderWaveControls() {
     wavesContainer.innerHTML = '<h3>Wave Layers</h3>';
+    
     animation.config.waves.forEach((wave, index) => {
         const block = document.createElement('div');
+        
         block.className = 'wave-control-block';
 
         const hexColor = rgbaToHex(wave.color);
@@ -71,6 +78,7 @@ function renderWaveControls() {
                 </div>
             </div>
         `;
+        
         wavesContainer.appendChild(block);
     });
 }
@@ -81,43 +89,77 @@ function renderParticleColors() {
         // Extract hex from rgba prefix "rgba(r, g, b,"
         const match = prefix.match(/rgba\((\d+),\s*(\d+),\s*(\d+)/);
         let hex = "#ffffff";
+        
         if (match) {
             const r = parseInt(match[1]).toString(16).padStart(2, '0');
             const g = parseInt(match[2]).toString(16).padStart(2, '0');
             const b = parseInt(match[3]).toString(16).padStart(2, '0');
             hex = `#${r}${g}${b}`;
+        } else if (prefix.startsWith('#')) {
+            hex = prefix;
         }
 
         const wrapper = document.createElement('div');
+        
         wrapper.className = 'color-input-wrapper';
+        
         wrapper.innerHTML = `
             <input type="color" value="${hex}" oninput="updateParticleColor(${index}, this.value)">
             ${animation.config.colors.particleColorPrefixes.length > 1 ? `<button class="remove-color-btn" onclick="removeParticleColor(${index})">×</button>` : ''}
         `;
+        
         particleColorsContainer.appendChild(wrapper);
+    });
+}
+
+function renderBackgroundColors() {
+    backgroundColorsContainer.innerHTML = '';
+    
+    animation.config.colors.backgroundGradient.forEach((color, index) => {
+        const hex = color.startsWith('#') ? color : rgbaToHex(color);
+        
+        const wrapper = document.createElement('div');
+        
+        wrapper.className = 'color-input-wrapper';
+        
+        wrapper.innerHTML = `
+            <input type="color" value="${hex}" oninput="updateBackgroundColor(${index}, this.value)">
+            ${animation.config.colors.backgroundGradient.length > 1 ? `<button class="remove-color-btn" onclick="removeBackgroundColor(${index})">×</button>` : ''}
+        `;
+        
+        backgroundColorsContainer.appendChild(wrapper);
     });
 }
 
 function syncUI() {
     particleCountInput.value = animation.config.particles.maxCount;
-    particleCountVal.textContent = animation.config.particles.maxCount;
+    
+    particleCountVal.textContent = animation.config.particles.maxCount.toString();
+    
     renderWaveControls();
     renderParticleColors();
+    renderBackgroundColors();
 }
 
 // --- Interaction Handlers ---
 
 window.updateWave = function(index, prop, value) {
     const wave = animation.config.waves[index];
+    
     if (prop === 'color') {
         wave.color = hexToRgba(value, 0.25);
     } else {
-        wave[prop] = parseFloat(value);
+        wav
+        e[prop] = parseFloat(value);
     }
+    
     // Update the label in the UI without full re-render
     const block = wavesContainer.children[index + 1]; // +1 for the <h3>
     const label = block.querySelector(`input[oninput*="'${prop}'"]`).previousElementSibling.querySelector('span');
-    if (label) label.textContent = value;
+    
+    if (label) {
+        label.textContent = value;
+    }
 };
 
 window.addNewWave = function() {
@@ -131,6 +173,7 @@ window.addNewWave = function() {
         mouseInfluence: 0.45,
         layers: 2
     });
+    
     renderWaveControls();
 };
 
@@ -157,6 +200,22 @@ window.removeParticleColor = function(index) {
         animation.config.colors.particleColorPrefixes.splice(index, 1);
         renderParticleColors();
         animation.initParticles();
+    }
+};
+
+window.updateBackgroundColor = function(index, hex) {
+    animation.config.colors.backgroundGradient[index] = hex;
+};
+
+window.addBackgroundColor = function() {
+    animation.config.colors.backgroundGradient.push('#ffffff');
+    renderBackgroundColors();
+};
+
+window.removeBackgroundColor = function(index) {
+    if (animation.config.colors.backgroundGradient.length > 1) {
+        animation.config.colors.backgroundGradient.splice(index, 1);
+        renderBackgroundColors();
     }
 };
 
