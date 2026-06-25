@@ -1,0 +1,49 @@
+{
+  "name": "js-waves-particles",
+  "version": "1.0.0",
+  "description": "A lightweight, canvas-based wave and particle animation library with mouse-reactive effects. Perfect for adding a subtle, organic feel to backgrounds in web projects.",
+  "type": "module",
+  "main": "./dist/wave-particles.iife.js",
+  "module": "./dist/wave-particles.esm.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./src/index.d.ts",
+        "default": "./dist/wave-particles.esm.js"
+      },
+      "require": {
+        "types": "./src/index.d.ts",
+        "default": "./dist/wave-particles.iife.js"
+      }
+    }
+  },
+  "files": [
+    "dist/",
+    "src/"
+  ],
+  "scripts": {
+    "build:esm": "node build.js esm",
+    "build:umd": "node build.js umd",
+    "build": "npm run build:esm && npm run build:umd"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.0"
+  },
+  "keywords": [
+    "canvas",
+    "animation",
+    "waves",
+    "particles",
+    "mouse-reactive",
+    "background-animation",
+    "visual-effects"
+  ],
+  "author": "Luis 'PlatinumBlade' Moniz",
+  "license": "MIT",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PlatinumBlade/js-waves-particles.git"
+  }
+}
