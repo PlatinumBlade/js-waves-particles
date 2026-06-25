@@ -1,17 +1,21 @@
-# 🌊 js-waves-particles
+# js-waves-particles
 
 A lightweight, high-performance canvas animation engine for organic wave and particle effects. Engineered for fluid motion and responsiveness by Luis 'PlatinumBlade' Moniz.
 
-## ✨ Key Features
+**[View Live Demo & Playground](https://platinumblade.github.io/js-waves-particles/examples/index.html)**
 
-- 🌊 **Multiple Wave Layers**: Smooth, sine-based wave animations with customizable amplitude, frequency, and speed.
-- ✨ **Floating Particles**: Dynamic particle system with pulsing opacity and mouse-repulsion.
-- 🖱️ **Mouse/Touch Reactive**: Waves and particles respond to cursor movements and touch events with smoothed interpolation.
-- 🎨 **Fully Customizable**: Override colors, gradients, and animation parameters via a simple config object.
-- 📦 **Zero Dependencies**: Pure JavaScript, lightweight, and framework-agnostic.
-- 🛠️ **Fully Typed**: Shipped with TypeScript definitions for an excellent developer experience.
+### [Changelog](./CHANGELOG.md)
 
-## 🚀 Installation
+## Key Features
+
+- **Multiple Wave Layers**: Smooth, sine-based wave animations with customizable amplitude, frequency, and speed.
+- **Floating Particles**: Dynamic particle system with pulsing opacity and mouse-repulsion.
+- **Mouse/Touch Reactive**: Waves and particles respond to cursor movements and touch events with smoothed interpolation.
+- **Fully Customizable**: Override colors, gradients, and animation parameters via a simple config object.
+- **Zero Dependencies**: Pure JavaScript, lightweight, and framework-agnostic.
+- **Fully Typed**: Shipped with TypeScript definitions for an excellent developer experience.
+
+## Installation
 
 Once you have the package in your project:
 
@@ -19,7 +23,7 @@ Once you have the package in your project:
 npm install js-waves-particles
 ```
 
-## 📖 Quick Start
+## Quick Start
 
 ### 1. Modern Bundlers (ESM)
 
@@ -44,7 +48,7 @@ const animation = new WaveParticles();
 </script>
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 You can pass a configuration object to the constructor to customize the visual engine.
 
@@ -74,7 +78,7 @@ const animation = new WaveParticles({
 });
 ```
 
-## 🧩 Framework Integration
+## Framework Integration
 
 ### React
 
@@ -109,7 +113,7 @@ onUnmounted(() => {
 </script>
 ```
 
-## 🛠️ API Reference
+## API Reference
 
 ### `.start()`
 Resumes the animation loop and re-attaches event listeners.
@@ -123,7 +127,7 @@ Forces the engine to recalculate dimensions and redistribute particles. Handled 
 ### `.destroy()`
 The nuclear option. Stops animation, removes listeners, and cleans up the DOM (if auto-created).
 
-## 📄 License
+## License
 
 [MIT](./LICENSE) © 2026 Luis 'PlatinumBlade' Moniz
 
