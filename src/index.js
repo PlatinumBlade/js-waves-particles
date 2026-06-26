@@ -13,7 +13,7 @@ class WaveParticles {
      * @param {import('./index').WaveParticlesConfig} [options.config] - Visual parameters for waves, particles, and colors.
      */
     constructor(options = {}) {
-        const {canvas: providedCanvasOrSelector, config} = options || {};
+        const { canvas: providedCanvasOrSelector, config } = options || {};
 
         // --- State ---
         this.canvas = null;
@@ -124,7 +124,7 @@ class WaveParticles {
                     mouseInfluence: 0.55
                 }
             ],
-            particles: {countScale: 8000, maxCount: 180},
+            particles: { countScale: 8000, maxCount: 180 },
             colors: {
                 backgroundGradient: ['#fdfcfb', '#f7ede2', '#e8d5d0'],
                 particleColorPrefixes: [
@@ -135,9 +135,9 @@ class WaveParticles {
                     'rgba(232, 213, 208,'
                 ],
                 mouseGlowStops: [
-                    {offset: 0, color: 'rgba(255, 255, 255, 0.08)'},
-                    {offset: 0.5, color: 'rgba(248, 225, 231, 0.04)'},
-                    {offset: 1, color: 'rgba(248, 225, 231, 0)'}
+                    { offset: 0, color: 'rgba(255, 255, 255, 0.08)' },
+                    { offset: 0.5, color: 'rgba(248, 225, 231, 0.04)' },
+                    { offset: 1, color: 'rgba(248, 225, 231, 0)' }
                 ]
             }
         };
@@ -159,7 +159,7 @@ class WaveParticles {
                 result[key] = userConfig[key];
             }
         }
-        
+
         return result;
     }
 
@@ -220,33 +220,31 @@ class WaveParticles {
         }
 
         const rect = this.canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
 
-        let w, h;
+        // Use CSS pixels for logical dimensions.
+        // Fallback to window size if canvas is not in layout (prevents the "multiplication" bug).
+        const w = rect.width || window.innerWidth;
+        const h = rect.height || window.innerHeight;
 
-        const attrW = parseInt(this.canvas.getAttribute('width'), 10);
-        const attrH = parseInt(this.canvas.getAttribute('height'), 10);
-
-        if (attrW && attrH) {
-            w = Math.round(rect.width || attrW);
-            h = Math.round(rect.height || attrH);
-        } else {
-            w = window.innerWidth;
-            h = window.innerHeight;
-
-            if (!this.canvas.parentNode && document.body) {
-                document.body.insertBefore(this.canvas, document.body.firstChild);
-            }
-        }
-        
         this.width = w;
         this.height = h;
 
-        const dpr = window.devicePixelRatio || 1;
-
+        // Set physical pixels for the canvas buffer
         this.canvas.width = Math.round(w * dpr);
         this.canvas.height = Math.round(h * dpr);
 
-        if (this.ctx && this.isRunning) {
+        // Scale the context to ensure all drawing operations use CSS pixels.
+        // Re-get context if it was lost or not yet initialized.
+        if (!this.ctx) {
+            this.ctx = this.canvas.getContext('2d');
+        }
+
+        if (this.ctx) {
+            this.ctx.scale(dpr, dpr);
+        }
+
+        if (this.isRunning) {
             this.initParticles();
         }
     }
@@ -255,11 +253,11 @@ class WaveParticles {
      * Generates a new set of particles based on the current canvas area and configuration.
      */
     initParticles() {
-        const {countScale = 8000, maxCount = 180} = this.config.particles;
+        const { countScale = 8000, maxCount = 180 } = this.config.particles;
 
         const particleCount = Math.min(Math.floor((this.width * this.height) / (countScale > 0 ? countScale : 8000)), maxCount);
 
-        this.particles = Array.from({length: particleCount}, () => ({
+        this.particles = Array.from({ length: particleCount }, () => ({
             x: Math.random() * this.width,
             y: Math.random() * this.height,
             size: Math.random() * 4 + 1.5,
@@ -274,7 +272,7 @@ class WaveParticles {
 
     _onMouseMove(e) {
         const rect = this.canvas.getBoundingClientRect();
-        
+
         if (!rect) {
             return;
         }
@@ -292,7 +290,7 @@ class WaveParticles {
     _onTouchMove(e) {
         const touch = e.touches[0];
         const rect = this.canvas.getBoundingClientRect();
-        
+
         if (!touch || !rect) {
             return;
         }
@@ -312,13 +310,13 @@ class WaveParticles {
      */
     drawBackground(ctx) {
         const colors = this.config.colors.backgroundGradient;
-        
+
         const gradient = ctx.createRadialGradient(this.width / 2, this.height / 2, 0, this.width / 2, this.height / 2, Math.max(this.width, this.height) * 0.8);
-        
+
         colors.forEach((c, i) => gradient.addColorStop(i / (colors.length - 1 || 1), c));
-        
+
         ctx.fillStyle = gradient;
-        
+
         ctx.fillRect(0, 0, this.width, this.height);
     }
 
@@ -336,46 +334,46 @@ class WaveParticles {
 
             for (let layer = 0; layer < numLayers; layer++) {
                 const layerOpacity = (1 - layer / numLayers) * 0.5 + 0.5;
-                
+
                 ctx.beginPath();
-                
+
                 const baseY = this.height * wave.yOffset + layer * 3;
-                
+
                 const mouseEffect = this.mouseActive ? (mouseNormX - 0.5) * (wave.mouseInfluence || 0.45) * 150 : 0;
-                
+
                 ctx.moveTo(0, this.height);
 
                 const step = Math.max(2, Math.floor(this.width / 480));
-                
+
                 for (let x = 0; x <= this.width; x += step) {
                     let y = baseY;
-                    
+
                     y += Math.sin(x * wave.frequency + this.time * wave.speed + layer * 0.1) * wave.amplitude;
                     y += Math.sin(x * wave.frequency * 1.5 + this.time * wave.speed * 0.7 + wi) * wave.amplitude * 0.3;
-                    
+
                     if (this.mouseActive) {
                         const dx = x - this.mouseX;
                         const dist = Math.abs(dx) / this.width;
                         y += Math.sin(dist * Math.PI) * (mouseNormY > 0 ? (this.mouseY - this.height / 2) : 0) * 0.1 * (wave.mouseInfluence || 0.45);
                     }
-                    
+
                     y += mouseEffect * Math.sin((x / this.width) * Math.PI);
-                    
+
                     ctx.lineTo(x, y);
                 }
-                
+
                 ctx.lineTo(this.width, this.height);
-                
+
                 ctx.closePath();
-                
+
                 const baseColor = wave.color || 'rgba(139, 114, 86, 0.25)';
-                
+
                 ctx.fillStyle = baseColor.replace(/([\d.]+)\)$/, (m) => `${parseFloat(m) * layerOpacity})`);
-                
+
                 if (wave.lineWidth != null) {
                     ctx.lineWidth = wave.lineWidth;
                 }
-                
+
                 ctx.fill();
             }
         }
@@ -387,61 +385,61 @@ class WaveParticles {
      */
     drawParticles(ctx) {
         const maxDist = 150;
-        
+
         for (const p of this.particles) {
             p.pulse += p.pulseSpeed;
-            
+
             const currentOpacity = p.opacity * (Math.sin(p.pulse) * 0.3 + 0.7);
-            
+
             if (this.mouseActive) {
                 const dx = p.x - this.mouseX, dy = p.y - this.mouseY, dist = Math.sqrt(dx * dx + dy * dy);
-                
+
                 if (dist < maxDist && dist > 0.1) {
                     const force = (1 - dist / maxDist) * 2;
                     p.x += (dx / dist) * force;
                     p.y += (dy / dist) * force;
                 }
             }
-            
+
             p.x += p.speedX;
             p.y += p.speedY;
-            
+
             if (p.x < 0) {
                 p.x = this.width;
             }
-            
+
             if (p.x > this.width) {
                 p.x = 0;
             }
-            
+
             if (p.y < 0) {
                 p.y = this.height;
             }
-            
+
             if (p.y > this.height) {
                 p.y = 0;
             }
 
             const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 2);
-            
+
             grad.addColorStop(0, p.colorPrefix + currentOpacity + ')');
-            
+
             grad.addColorStop(1, p.colorPrefix + '0)');
-            
+
             ctx.beginPath();
-            
+
             ctx.fillStyle = grad;
-            
+
             ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
-            
+
             ctx.fill();
-            
+
             ctx.beginPath();
-            
+
             ctx.fillStyle = p.colorPrefix + (currentOpacity * 0.8) + ')';
-            
+
             ctx.arc(p.x, p.y, p.size * 0.5, 0, Math.PI * 2);
-            
+
             ctx.fill();
         }
     }
@@ -454,19 +452,19 @@ class WaveParticles {
         if (!this.mouseActive) {
             return;
         }
-        
+
         const gradient = ctx.createRadialGradient(this.mouseX, this.mouseY, 0, this.mouseX, this.mouseY, 200);
-        
+
         const stops = this.config.colors.mouseGlowStops;
-        
+
         stops.forEach((s) => gradient.addColorStop(s.offset, s.color));
-        
+
         ctx.beginPath();
-        
+
         ctx.fillStyle = gradient;
-        
+
         ctx.arc(this.mouseX, this.mouseY, 200, 0, Math.PI * 2);
-        
+
         ctx.fill();
     }
 
@@ -477,19 +475,19 @@ class WaveParticles {
         if (!this.ctx) {
             return;
         }
-        
+
         this.time += 1;
-        
+
         this.mouseX += (this.targetMouseX - this.mouseX) * 0.08;
         this.mouseY += (this.targetMouseY - this.mouseY) * 0.08;
-        
+
         this.ctx.clearRect(0, 0, this.width, this.height);
-        
+
         this.drawBackground(this.ctx);
         this.drawWaves(this.ctx);
         this.drawParticles(this.ctx);
         this.drawMouseGlow(this.ctx);
-        
+
         if (this.isRunning) {
             requestAnimationFrame(() => this.animate());
         }
@@ -502,16 +500,16 @@ class WaveParticles {
         if (this.isRunning) {
             return;
         }
-        
+
         if (typeof window !== 'undefined') {
-            window.addEventListener('mousemove', this._onMouseMove, {passive: true});
-            window.addEventListener('touchmove', this._onTouchMove, {passive: false});
-            window.addEventListener('touchend', this._onTouchEnd, {passive: true});
+            window.addEventListener('mousemove', this._onMouseMove, { passive: true });
+            window.addEventListener('touchmove', this._onTouchMove, { passive: false });
+            window.addEventListener('touchend', this._onTouchEnd, { passive: true });
             window.addEventListener('mouseleave', this._onMouseLeave);
         }
-        
+
         this.isRunning = true;
-        
+
         this.animate();
     }
 
@@ -520,7 +518,7 @@ class WaveParticles {
      */
     stop() {
         this.isRunning = false;
-        
+
         if (typeof window !== 'undefined') {
             window.removeEventListener('mousemove', this._onMouseMove);
             window.removeEventListener('touchmove', this._onTouchMove);
@@ -534,15 +532,15 @@ class WaveParticles {
      */
     destroy() {
         this.stop();
-        
+
         if (typeof window !== 'undefined') {
             window.removeEventListener('resize', this._onResize);
         }
-        
+
         if (this.canvas && this.canvas.id === 'wave-particles-canvas' && this.canvas.parentNode) {
             this.canvas.parentNode.removeChild(this.canvas);
         }
-        
+
         this.canvas = null;
         this.ctx = null;
     }

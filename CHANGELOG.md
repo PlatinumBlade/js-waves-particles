@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+
+## [1.0.3] - 2026-06-25
+
+### Changes
+- Fix background rendering of the canvas for mobile devices
+
 ## [1.0.2] - 2026-06-25
 
 ### Changes
